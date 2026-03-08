@@ -1,0 +1,6 @@
+com/barbershop/service/AppointmentServiceTest$TrackingGoogleCalendarService.class
+com/barbershop/service/AppointmentServiceTest$TrackingClientService.class
+com/barbershop/service/AppointmentServiceTest.class
+com/barbershop/service/AppointmentServiceTest$TrackingShopServiceService.class
+com/barbershop/service/AppointmentServiceTest$TrackingBarberService.class
+com/barbershop/service/AppointmentServiceTest$InMemoryAppointmentRepository.class
