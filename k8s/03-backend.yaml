@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: backend
+  namespace: barbershop
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: backend
+  template:
+    metadata:
+      labels:
+        app: backend
+    spec:
+      containers:
+        - name: backend
+          image: barbershop-backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_DATASOURCE_URL
+              value: jdbc:postgresql://postgres:5432/barbershop
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: barbershop-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: barbershop-secret
+                  key: POSTGRES_PASSWORD
+            - name: APP_GOOGLE_CALENDAR_ENABLED
+              value: "false"
+            - name: APP_CORS_ALLOWED_ORIGIN
+              value: "*"
+            - name: APP_AUTH_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: barbershop-secret
+                  key: APP_AUTH_EMAIL
+            - name: APP_AUTH_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: barbershop-secret
+                  key: APP_AUTH_PASSWORD
+            - name: APP_AUTH_DISPLAY_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: barbershop-secret
+                  key: APP_AUTH_DISPLAY_NAME
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+  namespace: barbershop
+spec:
+  selector:
+    app: backend
+  ports:
+    - name: http
+      port: 8080
+      targetPort: 8080
