@@ -43,3 +43,27 @@ mvn spring-boot:run
 ## Docker
 
 O `Dockerfile` deste repositório empacota e executa o backend a partir do JAR gerado.
+
+## Deploy no Kubernetes
+
+Atualizar a versao da imagem do backend no cluster:
+
+```bash
+./scripts/deploy-backend.sh v1.0.3
+```
+
+O script executa:
+
+- `kubectl -n barbershop set image deployment/backend backend=barbershop-backend:<tag>`
+- `kubectl -n barbershop rollout status deployment/backend`
+
+Manifesto base:
+
+- `k8s/03-backend.yaml` usa uma tag fixa de release (`barbershop-backend:v1.0.0`).
+- Atualize a tag no manifesto sempre que publicar uma nova versao.
+
+Depois, para acompanhar no k9s:
+
+```bash
+k9s -n barbershop
+```
