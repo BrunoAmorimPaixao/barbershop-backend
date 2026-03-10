@@ -87,6 +87,15 @@ Para ambiente produtivo básico, o repositório também inclui:
 - `k8s/06-cert-manager-clusterissuer.yaml` para emissao automatica de certificado TLS com `cert-manager`
 - `k8s/07-grafana-ingress.yaml` para expor o Grafana com `Ingress` HTTPS
 
+O Grafana tambem sobe com dashboard inicial provisionado automaticamente:
+
+- `Barbershop Overview`
+- throughput HTTP
+- taxa de erro `5xx`
+- latencia media e por rota
+- memoria JVM
+- conexoes do `HikariCP`
+
 Métricas iniciais que valem dashboard/alerta:
 
 - latência HTTP por rota
@@ -109,6 +118,34 @@ kubectl apply -f k8s/04-prometheus.yaml
 kubectl apply -f k8s/05-grafana.yaml
 kubectl apply -f k8s/06-cert-manager-clusterissuer.yaml
 kubectl apply -f k8s/07-grafana-ingress.yaml
+```
+
+Ou com um comando so via script:
+
+```bash
+chmod +x scripts/deploy-k8s-stack.sh
+./scripts/deploy-k8s-stack.sh
+```
+
+Para incluir `Ingress` e TLS do Grafana no deploy:
+
+```bash
+INCLUDE_INGRESS=true ./scripts/deploy-k8s-stack.sh
+```
+
+### Backend no Minikube
+
+Para cluster local com `minikube`, o backend usa `imagePullPolicy: IfNotPresent` em [k8s/03-backend.yaml](/home/brunopaixao/IdeaProjects/barbershop-backend/k8s/03-backend.yaml). Antes do deploy, faca o build e carregue a imagem no cluster:
+
+```bash
+chmod +x scripts/build-and-load-minikube-image.sh
+./scripts/build-and-load-minikube-image.sh
+```
+
+Depois aplique a stack:
+
+```bash
+./scripts/deploy-k8s-stack.sh
 ```
 
 Credenciais iniciais do Grafana:
